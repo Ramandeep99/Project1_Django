@@ -11,12 +11,13 @@ from django.contrib import messages
 def index(request):
     Username = None
     if 'Username' in request.session:
-        Username = request.session['Username'] 
+
+        Username = User.objects.get(email =  request.session['email']).Username
     
     variable = {
         'name' : Username
     }
-    #  we will fetch data from db and send it in html through variables 
+    #  we will fetch data from db and send it in html through variables
     return render(request , 'index.html' , variable )
 
 def userRegister(request):
@@ -26,6 +27,10 @@ def userRegister(request):
         Phoneno = request.POST.get('Phoneno')
         Password = request.POST.get('Password')
         Confirm_password = request.POST.get('Confirm_password')
+        if Password != Confirm_password:
+            messages.success(request, 'Password not Matched with Confirm Password')
+            return render(request , 'userRegister.html')
+
         b = User.objects.filter(email=Email).exists()
         if b:
             messages.success(request, 'User Already  Registered')
@@ -33,37 +38,34 @@ def userRegister(request):
         user = User(Username = Username , email = Email , Phoneno = Phoneno , password = Password , date = datetime.today() )
         user.save()
         messages.success(request, 'User Registered')
-        return render(request , 'userLogin.html')
+        return redirect('/userLogin')
     return render(request , 'userRegister.html')
-
-
 
 def userLogin(request):
     if request.method == "POST":
         Email = request.POST.get('Email')
         Password = request.POST.get('Password')
-        storedData = User.objects.get(email = Email , password = Password )
-        print(Email , Password)
-        data = {}
-        data['name'] = storedData.Username
-        data['email'] = storedData.email
-        request.session['name'] = storedData.Username
+        try:
+            storedData = User.objects.get(email = Email , password = Password )
 
-        if storedData and storedData.password == Password:
-            messages.success(request, 'Logged in')
+            data = {}
+            data['name'] = storedData.Username
+            data['email'] = storedData.email
 
-            request.session['Username'] = storedData.Username
-            request.session['email'] = storedData.email
+            if storedData and storedData.password == Password:
+                messages.success(request, 'Logged in')
 
-            return render( request , 'index.html' , data)
-        else:
-            messages.info(request, 'Invalid Login Credentials')
+                request.session['Username'] = storedData.Username
+                request.session['email'] = storedData.email
+
+                return redirect( '/' , data)
+            else:
+                messages.info(request, 'Invalid Login Credentials')
+                return render(request , 'userLogin.html')
+        except:
+            messages.info(request, 'Entered Email Not Found')
             return render(request , 'userLogin.html')
     return render(request , 'userLogin.html')
-
-def userProfile(request):
-    data = {}
-    return render(request , 'userProfile.html' , data)
 
 def userEdit(request):
     if request.method == 'POST':
@@ -72,15 +74,31 @@ def userEdit(request):
         Phoneno = request.POST.get('Phoneno')
         Password = request.POST.get('Password')
         Confirm_password = request.POST.get('Confirm_password')
-        user = User.objects.get(email = Email)
+        # print(Password , Confirm_password)
+        if Password != Confirm_password :
+            messages.success(request, 'Password not Matched with Confirm Password')
+            userData = User.objects.get(email = request.session['email'])
+            userDataDict = {}
+            userDataDict['Username']  = userData.Username
+            userDataDict['Email']  = userData.email
+            userDataDict['Phoneno']  = userData.Phoneno
+            userDataDict['Password']  = userData.password
+            request.session['Username'] = userData.Username
+            request.session['email'] = userData.email
+            return render(request , 'userEdit.html' , userDataDict)
 
+
+        user = User.objects.get(email = request.session['email'])
         user.Username = Username 
         user.email = Email  
         user.Phoneno = Phoneno 
         user.password = Password 
-        user.date = datetime.today() 
+        user.date = datetime.today()
         user.save()
+        request.session['email'] = Email
+        request.session['Username'] = Username
         messages.success(request, 'User Updated')
+
         # updating for home page
         userData = User.objects.get(email = request.session['email'])
         userDataDict = {}
@@ -88,21 +106,22 @@ def userEdit(request):
         userDataDict['Email']  = userData.email
         userDataDict['Phoneno']  = userData.Phoneno
         userDataDict['Password']  = userData.password
-        return render(request , 'userEdit.html' , userDataDict)
-        return redirect('/')
+        return redirect('/' , userDataDict)
 
-    elif request.session['Username']:
+    elif 'Username' in request.session:
         userData = User.objects.get(email = request.session['email'])
         userDataDict = {}
         userDataDict['Username']  = userData.Username
         userDataDict['Email']  = userData.email
         userDataDict['Phoneno']  = userData.Phoneno
         userDataDict['Password']  = userData.password
+        request.session['Username'] = userData.Username
+        request.session['email'] = userData.email
+        print(request.session['Username'] , request.session['email'])
         return render(request , 'userEdit.html' , userDataDict)
     else:
         messages.info(request , 'User NOt Logged In')
         return render(request , 'userLogin.html')
-    # return render(request , 'userEdit.html')
 
 def userLogout(request):
     Username = None
@@ -111,5 +130,5 @@ def userLogout(request):
         return redirect('/userLogin')
     return render(request , 'userLogin')
 
-def admin(request):
+def adminLogin(request):
     return HttpResponse('from admin page')

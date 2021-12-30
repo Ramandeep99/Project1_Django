@@ -7,7 +7,7 @@ python manage.py migrate
 python manage.py createsuperusers
 
 Raman
-Raman@1234 
+admin
 
 
 csrf token :  The CSRF token is like an alphanumeric code or random secret value that's peculiar to that particular site. Hence, no other site has the same code. In Django, the token is set by CsrfViewMiddleware in the settings.py file. 

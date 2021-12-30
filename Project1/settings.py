@@ -33,7 +33,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [  # added to maintain session
     'home.apps.HomeConfig',
-    'django.contrib.admin',
+    'django.contrib.admin',    # default admin
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',

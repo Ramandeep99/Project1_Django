@@ -7,3 +7,4 @@ class User(models.Model):
     Phoneno = models.IntegerField()
     password = models.CharField(max_length=10)
     date = models.DateField()
+
