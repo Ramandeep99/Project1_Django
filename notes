@@ -1,0 +1,24 @@
+python manage.py runserver - run server
+python manage.py startapp home - create new folder
+
+python manage.py makemigrations
+python manage.py migrate
+
+python manage.py createsuperusers
+
+Raman
+Raman@1234 
+
+
+csrf token :  The CSRF token is like an alphanumeric code or random secret value that's peculiar to that particular site. Hence, no other site has the same code. In Django, the token is set by CsrfViewMiddleware in the settings.py file. 
+            A hidden form field with a csrfmiddlewaretoken field is present in all outgoing requests.
+
+make models -> run migrations -> run migrate
+
+to make a schema - we have to make model in models , 
+then have to register that in admin by importing it from models,
+then we have to register app name in installed app in settings as string
+
+
+makemigrations - to reload and save changes
+migrate - apply the current changes

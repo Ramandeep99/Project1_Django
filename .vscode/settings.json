@@ -1,0 +1,7 @@
+{
+    "git.ignoreLimitWarning": true,
+    "html.format.templating": true,
+    "html.format.indentHandlebars": true,
+    "html.format.endWithNewline": true,
+    "html-css-class-completion.enableEmmetSupport": true
+}

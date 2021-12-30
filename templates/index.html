@@ -1,0 +1,21 @@
+
+{% extends 'base.html' %}
+
+{% block title %} Home Page {% endblock title %}
+
+{% block body %}
+
+<div class="container mt-5 text-center">
+
+    {% if name %}
+    <h2 class='mt-5'> Welcome Again to Home Page, <b> {{name}} </b>
+    </h2>
+    {% else %}
+    <h2> Welcome to Home Page </h2>
+    {% endif %}
+
+
+</div>
+{% endblock body %}
+
+
