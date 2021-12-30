@@ -130,5 +130,6 @@ def userLogout(request):
         return redirect('/userLogin')
     return render(request , 'userLogin')
 
+
 def adminLogin(request):
     return HttpResponse('from admin page')

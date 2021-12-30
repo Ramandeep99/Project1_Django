@@ -1,0 +1,8 @@
+
+You should have python and django installed in your system.
+
+admin - Raman
+Password - Kapil@1234
+
+
+
